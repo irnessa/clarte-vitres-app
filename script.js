@@ -240,8 +240,10 @@ async function telechargerPDF() {
     }
 }
 
-// Initialisation
+// Initialisation quand la page est chargée
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('JavaScript chargé !'); // Pour debug
+    
     // Événements
     document.getElementById('type_facturation').addEventListener('change', changerTypeFacturation);
     document.querySelector('.add-btn').addEventListener('click', ajouterPrestation);
