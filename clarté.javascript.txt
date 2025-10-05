@@ -36,7 +36,7 @@ function ajouterPrestation() {
     });
     
     prestationsDiv.appendChild(nouvellePrestation);
-    changerTypeFacturation(); // Mettre à jour l'affichage des champs
+    changerTypeFacturation();
 }
 
 function supprimerPrestation(bouton) {
@@ -88,7 +88,6 @@ function calculerTotal(prestations) {
 }
 
 function genererFacture() {
-    // Validation des données
     if (!validerFormulaire()) {
         alert('Veuillez remplir tous les champs obligatoires');
         return;
@@ -106,7 +105,6 @@ function validerFormulaire() {
         return false;
     }
     
-    // Valider chaque prestation
     const prestations = document.querySelectorAll('.prestation');
     for (let prestation of prestations) {
         const date = prestation.querySelector('input[name="date"]').value;
@@ -220,7 +218,6 @@ async function telechargerPDF() {
     const preview = document.getElementById('facturePreview');
     
     try {
-        // Utiliser html2canvas pour capturer le contenu
         const canvas = await html2canvas(preview, {
             scale: 2,
             useCORS: true,
@@ -232,13 +229,9 @@ async function telechargerPDF() {
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
         
-        // Ajouter l'image au PDF
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        
-        // Télécharger le PDF
         pdf.save(`facture_${factureData.numero_facture}.pdf`);
         
-        // Fermer le modal après téléchargement
         fermerModal();
         
     } catch (error) {
@@ -249,7 +242,20 @@ async function telechargerPDF() {
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', function() {
-    changerTypeFacturation();
+    // Événements
+    document.getElementById('type_facturation').addEventListener('change', changerTypeFacturation);
+    document.querySelector('.add-btn').addEventListener('click', ajouterPrestation);
+    document.querySelector('.generate-btn').addEventListener('click', genererFacture);
+    document.querySelector('.close-btn').addEventListener('click', fermerModal);
+    document.querySelector('.secondary-btn').addEventListener('click', fermerModal);
+    document.querySelector('.primary-btn').addEventListener('click', telechargerPDF);
+    
+    // Déléguation d'événements pour les boutons de suppression
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-btn')) {
+            supprimerPrestation(e.target);
+        }
+    });
     
     // Fermer le modal en cliquant à l'extérieur
     document.getElementById('previewModal').addEventListener('click', function(e) {
@@ -257,4 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fermerModal();
         }
     });
+    
+    // Initialiser l'affichage
+    changerTypeFacturation();
 });
