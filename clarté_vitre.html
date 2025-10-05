@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLARTÉ VITRES - Générateur de Factures</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧽 CLARTÉ VITRES</h1>
+            <p>Générateur de Factures Professionnel</p>
+        </div>
+        
+        <div class="contact-info">
+            <strong>📞 07 77 44 84 26</strong><br>
+            <strong>📧 clartevitres@gmail.com</strong><br>
+            <strong>📍 Dijon (21000)</strong><br>
+            <strong>👤 Georges-Emmanuel Delmaet</strong><br>
+            <strong>🏢 SIRET 992 008 904 00011</strong>
+        </div>
+        
+        <form id="factureForm">
+            <div class="section-title">Informations Client</div>
+            
+            <div class="form-group">
+                <label>👤 Nom du client :</label>
+                <input type="text" id="client_nom" name="client_nom" required placeholder="Ex: Monsieur Dupont">
+            </div>
+            
+            <div class="form-group">
+                <label>🏠 Adresse :</label>
+                <input type="text" id="client_adresse" name="client_adresse" required placeholder="Ex: 15 Rue de la Liberté, 21000 Dijon">
+            </div>
+            
+            <div class="section-title">Détails de la Facture</div>
+            
+            <div class="form-group">
+                <label>📅 Mois de facturation :</label>
+                <input type="text" id="mois_facture" name="mois_facture" value="JANVIER 2025" required>
+            </div>
+            
+            <div class="form-group">
+                <label>📊 Type de facturation :</label>
+                <select name="type_facturation" id="type_facturation" onchange="changerTypeFacturation()">
+                    <option value="duree">⏱️ À la durée</option>
+                    <option value="quantite">📦 À la quantité</option>
+                </select>
+            </div>
+            
+            <div class="section-title">Prestations</div>
+            
+            <div id="prestations">
+                <div class="prestation">
+                    <div class="form-group">
+                        <label>📅 Date (JJ/MM/AAAA) :</label>
+                        <input type="text" name="date" placeholder="07/01/2025" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📋 Désignation :</label>
+                        <input type="text" name="designation" placeholder="Nettoyage vitres appartement" required>
+                    </div>
+                    <div class="form-group champ-duree">
+                        <label>⏱️ Durée :</label>
+                        <input type="text" name="duree" placeholder="2h30">
+                    </div>
+                    <div class="form-group champ-quantite hidden">
+                        <label>📦 Quantité :</label>
+                        <input type="text" name="quantite" placeholder="15 vitres">
+                    </div>
+                    <div class="form-group">
+                        <label>💰 Prix unitaire HT (€) :</label>
+                        <input type="number" step="0.01" name="prix_unitaire" required placeholder="65.00">
+                    </div>
+                    <button type="button" class="remove-btn" onclick="supprimerPrestation(this)">🗑️ Supprimer</button>
+                </div>
+            </div>
+            
+            <button type="button" class="add-btn" onclick="ajouterPrestation()">➕ Ajouter une prestation</button>
+            <br><br>
+            <button type="button" class="generate-btn" onclick="genererFacture()">📄 Générer la Facture PDF</button>
+        </form>
+    </div>
+
+    <!-- Modal pour prévisualisation -->
+    <div id="previewModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Aperçu de la Facture</h2>
+                <button class="close-btn" onclick="fermerModal()">×</button>
+            </div>
+            <div id="facturePreview" class="facture-preview">
+                <!-- Le contenu de la facture sera généré ici -->
+            </div>
+            <div class="modal-actions">
+                <button class="secondary-btn" onclick="fermerModal()">Modifier</button>
+                <button class="primary-btn" onclick="telechargerPDF()">Télécharger PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
