@@ -12,7 +12,7 @@ Cette application permet de :
 
 ## 🚀 Utilisation
 
-1. Rendez-vous sur [l'application déployée](https://[votre-username].github.io/[nom-du-repo]/)
+1. Rendez-vous sur [l'application déployée](https://irnessa.github.io/clarte-vitres/)
 2. Renseignez les informations du client
 3. Ajoutez une ou plusieurs prestations
 4. Choisissez le type de facturation
@@ -31,14 +31,14 @@ Cette application permet de :
 
 Pour exécuter en local :
 1. Téléchargez tous les fichiers
-2. Ouvrez `darté_vitre.html` dans un navigateur web
+2. Ouvrez `index.html` dans un navigateur web
 3. Aucune installation requise !
 
 ## 📁 Fichiers
 
-- `darté_vitre.html` - Page principale
-- `root.css` - Styles CSS
-- `darté.javascript.txt` - Logique JavaScript
+- `index.html` - Page principale
+- `style.css` - Styles CSS
+- `script.js` - Logique JavaScript
 - `README.md` - Documentation
 
 ## 📄 Licence
