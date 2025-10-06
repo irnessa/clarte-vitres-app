@@ -57,7 +57,7 @@ function collecterDonnees() {
         const designation = prestation.querySelector('input[name="designation"]').value;
         const duree = prestation.querySelector('input[name="duree"]').value;
         const quantite = prestation.querySelector('input[name="quantite"]').value;
-        const prixUnitaire = parseFloat(prestation.querySelector('input[name="prix_unitaire"]').value);
+        const prixUnitaire = parseFloat(prestation.querySelector('input[name="prix_unitaire"]').value) || 0;
         
         prestations.push({
             date,
@@ -79,8 +79,8 @@ function collecterDonnees() {
 
 function genererNumeroFacture() {
     const now = new Date();
-    const timestamp = now.getTime().toString().slice(-4);
-    return `CV${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}-${timestamp}`;
+    const timestamp = Math.floor(Math.random() * 1000);
+    return `CV${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}-${timestamp.toString().padStart(3, '0')}`;
 }
 
 function calculerTotal(prestations) {
@@ -124,12 +124,14 @@ function afficherApercu() {
     preview.innerHTML = genererHTMLFacture();
     
     const modal = document.getElementById('previewModal');
-    modal.classList.remove('hidden');
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden'; // Empêche le défilement
 }
 
 function fermerModal() {
     const modal = document.getElementById('previewModal');
-    modal.classList.add('hidden');
+    modal.classList.remove('show');
+    document.body.style.overflow = 'auto'; // Rétablit le défilement
 }
 
 function genererHTMLFacture() {
@@ -213,56 +215,66 @@ function genererHTMLFacture() {
     `;
 }
 
-async function telechargerPDF() {
-    const { jsPDF } = window.jspdf;
-    const preview = document.getElementById('facturePreview');
+function telechargerPDF() {
+    // Solution simple : impression directe
+    const previewContent = document.getElementById('facturePreview').innerHTML;
+    const originalContent = document.body.innerHTML;
     
-    try {
-        const canvas = await html2canvas(preview, {
-            scale: 2,
-            useCORS: true,
-            logging: false
-        });
-        
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`facture_${factureData.numero_facture}.pdf`);
-        
-        fermerModal();
-        
-    } catch (error) {
-        console.error('Erreur lors de la génération du PDF:', error);
-        alert('Erreur lors de la génération du PDF. Veuillez réessayer.');
-    }
+    document.body.innerHTML = previewContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload();
 }
 
 // Initialisation quand la page est chargée
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('JavaScript chargé !'); // Pour debug
+    console.log('✅ Application Clarté Vitres chargée !');
     
-    // Événements
-    document.getElementById('type_facturation').addEventListener('change', changerTypeFacturation);
-    document.querySelector('.add-btn').addEventListener('click', ajouterPrestation);
-    document.querySelector('.generate-btn').addEventListener('click', genererFacture);
-    document.querySelector('.close-btn').addEventListener('click', fermerModal);
-    document.querySelector('.secondary-btn').addEventListener('click', fermerModal);
-    document.querySelector('.primary-btn').addEventListener('click', telechargerPDF);
+    // Événements - version corrigée
+    const typeFacturation = document.getElementById('type_facturation');
+    const addBtn = document.querySelector('.add-btn');
+    const generateBtn = document.querySelector('.generate-btn');
+    const closeBtn = document.querySelector('.close-btn');
+    const secondaryBtn = document.querySelector('.secondary-btn');
+    const primaryBtn = document.querySelector('.primary-btn');
+    const modal = document.getElementById('previewModal');
+    
+    if (typeFacturation) {
+        typeFacturation.addEventListener('change', changerTypeFacturation);
+    }
+    
+    if (addBtn) {
+        addBtn.addEventListener('click', ajouterPrestation);
+    }
+    
+    if (generateBtn) {
+        generateBtn.addEventListener('click', genererFacture);
+    }
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', fermerModal);
+    }
+    
+    if (secondaryBtn) {
+        secondaryBtn.addEventListener('click', fermerModal);
+    }
+    
+    if (primaryBtn) {
+        primaryBtn.addEventListener('click', telechargerPDF);
+    }
+    
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                fermerModal();
+            }
+        });
+    }
     
     // Déléguation d'événements pour les boutons de suppression
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-btn')) {
             supprimerPrestation(e.target);
-        }
-    });
-    
-    // Fermer le modal en cliquant à l'extérieur
-    document.getElementById('previewModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            fermerModal();
         }
     });
     
