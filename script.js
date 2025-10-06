@@ -125,13 +125,13 @@ function afficherApercu() {
     
     const modal = document.getElementById('previewModal');
     modal.classList.add('show');
-    document.body.style.overflow = 'hidden'; // Empêche le défilement
+    document.body.style.overflow = 'hidden';
 }
 
 function fermerModal() {
     const modal = document.getElementById('previewModal');
     modal.classList.remove('show');
-    document.body.style.overflow = 'auto'; // Rétablit le défilement
+    document.body.style.overflow = 'auto';
 }
 
 function genererHTMLFacture() {
@@ -230,7 +230,7 @@ function telechargerPDF() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Application Clarté Vitres chargée !');
     
-    // Événements - version corrigée
+    // Événements
     const typeFacturation = document.getElementById('type_facturation');
     const addBtn = document.querySelector('.add-btn');
     const generateBtn = document.querySelector('.generate-btn');
